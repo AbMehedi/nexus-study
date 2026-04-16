@@ -1,0 +1,17 @@
+# Node modules at root level (should only be in nexus-academic/)
+/node_modules
+/package-lock.json
+/package.json
+/implementation_plan.md
+/project_context.md
+
+# OS files
+.DS_Store
+*.swp
+*.swo
+*~
+
+# IDE
+.vscode/
+.idea/
+*.code-workspace
