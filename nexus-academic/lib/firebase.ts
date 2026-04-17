@@ -1,27 +1,63 @@
 import { initializeApp, getApps } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import {
+  getFirestore,
+  initializeFirestore,
+  persistentLocalCache,
+  persistentMultipleTabManager,
+  type Firestore,
+} from "firebase/firestore";
 
-// Your web app's Firebase configuration
-// IMPORTANT: Replace with your actual Firebase project configuration.
-const firebaseConfig = {
-  apiKey: "AIzaSyDxIZ25JV7uSHmBb54Par64Gvj0Vdw0IuY",
-  authDomain: "academin-nexus.firebaseapp.com",
-  projectId: "academin-nexus",
-  storageBucket: "academin-nexus.firebasestorage.app",
-  messagingSenderId: "69189787105",
-  appId: "1:69189787105:web:8851e924964a9f879f06a0"
+const requireEnv = (value: string | undefined, key: string) => {
+  if (!value) {
+    throw new Error(`Missing ${key}. Add it to .env.local.`);
+  }
+  return value;
 };
 
-// Initialize Firebase
-let app;
-if (!getApps().length) {
-  app = initializeApp(firebaseConfig);
-} else {
-  app = getApps()[0];
-}
+const firebaseConfig = {
+  apiKey: requireEnv(
+    process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+    "NEXT_PUBLIC_FIREBASE_API_KEY"
+  ),
+  authDomain: requireEnv(
+    process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+    "NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN"
+  ),
+  projectId: requireEnv(
+    process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+    "NEXT_PUBLIC_FIREBASE_PROJECT_ID"
+  ),
+  storageBucket: requireEnv(
+    process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+    "NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET"
+  ),
+  messagingSenderId: requireEnv(
+    process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+    "NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID"
+  ),
+  appId: requireEnv(
+    process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+    "NEXT_PUBLIC_FIREBASE_APP_ID"
+  ),
+};
+
+const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
 
 const auth = getAuth(app);
-const db = getFirestore(app);
+
+// Use modern persistentLocalCache (Firebase 10+) instead of deprecated
+// enableIndexedDbPersistence. Falls back to getFirestore on hot-reload.
+let db: Firestore;
+try {
+  db = initializeFirestore(app, {
+    localCache: persistentLocalCache({
+      tabManager: persistentMultipleTabManager(),
+    }),
+  });
+} catch {
+  // Already initialized on hot module reload — just get the existing instance
+  db = getFirestore(app);
+}
 
 export { auth, db };

@@ -84,37 +84,40 @@
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
+  --background: oklch(0.12 0.005 264);
+  --foreground: oklch(0.96 0.005 264);
+  --card: oklch(0.17 0.008 264);
+  --card-foreground: oklch(0.96 0.005 264);
+  --popover: oklch(0.17 0.008 264);
+  --popover-foreground: oklch(0.96 0.005 264);
+  --primary: oklch(0.62 0.22 264.376);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.22 0.01 264);
+  --secondary-foreground: oklch(0.96 0.005 264);
+  --muted: oklch(0.22 0.01 264);
+  --muted-foreground: oklch(0.62 0.01 264);
+  --accent: oklch(0.62 0.22 264.376);
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --border: oklch(1 0 0 / 8%);
+  --input: oklch(1 0 0 / 10%);
+  --ring: oklch(0.62 0.22 264.376);
+  --chart-1: oklch(0.62 0.22 264.376);
+  --chart-2: oklch(0.72 0.18 180);
+  --chart-3: oklch(0.75 0.18 90);
+  --chart-4: oklch(0.78 0.18 30);
+  --chart-5: oklch(0.65 0.22 0);
+  --sidebar: oklch(0.15 0.007 264);
+  --sidebar-foreground: oklch(0.96 0.005 264);
+  --sidebar-primary: oklch(0.62 0.22 264.376);
   --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --sidebar-accent: oklch(0.22 0.01 264);
+  --sidebar-accent-foreground: oklch(0.96 0.005 264);
+  --sidebar-border: oklch(1 0 0 / 6%);
+  --sidebar-ring: oklch(0.62 0.22 264.376);
+  /* Survival mode colors */
+  --survival-red: oklch(0.65 0.22 25);
+  --survival-orange: oklch(0.72 0.18 55);
 }
 
 @layer base {
@@ -127,4 +130,97 @@
   html {
     @apply font-sans;
   }
+}
+
+/* ============================================================
+   CUSTOM ANIMATIONS — Academic Nexus Dashboard
+   ============================================================ */
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes breathe-glow {
+  0%, 100% {
+    box-shadow: 0 0 8px 2px oklch(0.65 0.22 25 / 0.4),
+                0 0 20px 6px oklch(0.65 0.22 25 / 0.15);
+  }
+  50% {
+    box-shadow: 0 0 16px 6px oklch(0.65 0.22 25 / 0.7),
+                0 0 40px 12px oklch(0.65 0.22 25 / 0.3);
+  }
+}
+
+@keyframes countdown-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.85; transform: scale(1.015); }
+}
+
+@keyframes slide-down {
+  from { transform: translateY(-100%); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes tick-pop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(0.92) translateY(2px); opacity: 0.7; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes heatmap-hover {
+  0%   { transform: scale(1); }
+  100% { transform: scale(1.3); }
+}
+
+/* Utility classes */
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    oklch(0.22 0.01 264) 25%,
+    oklch(0.28 0.015 264) 50%,
+    oklch(0.22 0.01 264) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s infinite;
+}
+
+.animate-breathe-glow {
+  animation: breathe-glow 2s ease-in-out infinite;
+}
+
+.animate-countdown-pulse {
+  animation: countdown-pulse 1s ease-in-out infinite;
+}
+
+.animate-slide-down {
+  animation: slide-down 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.5s ease-out forwards;
+}
+
+.glass {
+  background: oklch(1 0 0 / 4%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid oklch(1 0 0 / 8%);
+}
+
+.glass-sidebar {
+  background: oklch(0.15 0.007 264 / 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-right: 1px solid oklch(1 0 0 / 6%);
 }

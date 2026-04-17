@@ -5,14 +5,20 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   GoogleAuthProvider,
-  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
   signInWithPopup,
 } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
-export default function LoginPage() {
+export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -20,12 +26,18 @@ export default function LoginPage() {
   const [isGoogleSubmitting, setIsGoogleSubmitting] = useState(false);
   const router = useRouter();
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters.");
+      return;
+    }
+
     setIsSubmitting(true);
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      await createUserWithEmailAndPassword(auth, email, password);
       router.push("/");
     } catch (error: any) {
       setError(error.message);
@@ -34,7 +46,7 @@ export default function LoginPage() {
     }
   };
 
-  const handleGoogleLogin = async () => {
+  const handleGoogleSignup = async () => {
     setError(null);
     setIsGoogleSubmitting(true);
     try {
@@ -52,18 +64,19 @@ export default function LoginPage() {
     <div className="flex items-center justify-center min-h-screen bg-background">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className="text-2xl">Login</CardTitle>
+          <CardTitle className="text-2xl">Create account</CardTitle>
           <CardDescription>
-            Enter your credentials to access your Academic Nexus dashboard.
+            Sign up to start building your Academic Nexus dashboard.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleLogin} className="space-y-4">
+          <form onSubmit={handleSignup} className="space-y-4">
             <div className="space-y-2">
               <label htmlFor="email">Email</label>
               <input
                 id="email"
                 type="email"
+                autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -75,6 +88,7 @@ export default function LoginPage() {
               <input
                 id="password"
                 type="password"
+                autoComplete="new-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -87,7 +101,7 @@ export default function LoginPage() {
               className="w-full"
               disabled={isSubmitting || isGoogleSubmitting}
             >
-              {isSubmitting ? "Signing in..." : "Login"}
+              {isSubmitting ? "Creating..." : "Sign up"}
             </Button>
           </form>
           <div className="my-4 flex items-center gap-3">
@@ -99,15 +113,15 @@ export default function LoginPage() {
             type="button"
             variant="outline"
             className="w-full"
-            onClick={handleGoogleLogin}
+            onClick={handleGoogleSignup}
             disabled={isSubmitting || isGoogleSubmitting}
           >
             {isGoogleSubmitting ? "Connecting..." : "Continue with Google"}
           </Button>
           <p className="mt-4 text-center text-sm text-muted-foreground">
-            New here?{" "}
-            <Link href="/signup" className="text-primary underline">
-              Create an account
+            Already have an account?{" "}
+            <Link href="/login" className="text-primary underline">
+              Login
             </Link>
           </p>
         </CardContent>
